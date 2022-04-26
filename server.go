@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -28,6 +29,16 @@ func main() {
 			return c.SendString("model " + c.Params("model"))
 		}
 		return c.SendStatus(200)
+	})
+
+	app.Get("/convert/:numeric", func(c *fiber.Ctx) error {
+		num := c.Params("numeric")
+		int, err := strconv.ParseInt(num, 10, 0)
+		if err != nil {
+			return fiber.NewError(500, "path variable isn't numeric")
+		}
+		msg := fmt.Sprintf("number %d", int)
+		return c.SendString(msg)
 	})
 
 	app.Listen(":3000")
