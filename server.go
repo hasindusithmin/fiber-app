@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
@@ -14,32 +13,43 @@ func main() {
 		return c.SendString("Hello, World!")
 	})
 
-	app.Get("/hello/:name", func(c *fiber.Ctx) error {
-		msg := fmt.Sprintf("Hello, %s", c.Params("name"))
-		return c.SendString(msg)
+	arithmetic := fiber.New()
+	arithmetic.Get("/", func(c *fiber.Ctx) error {
+		return c.SendString("golang maths")
 	})
-
-	app.Get("/user", func(c *fiber.Ctx) error {
-		msg := fmt.Sprintf("%s is %s years old", c.Query("name"), c.Query("age"))
-		return c.SendString(msg)
-	})
-
-	app.Get("/car/:model?", func(c *fiber.Ctx) error {
-		if c.Params("model") != "" {
-			return c.SendString("model " + c.Params("model"))
-		}
-		return c.SendStatus(200)
-	})
-
-	app.Get("/convert/:numeric", func(c *fiber.Ctx) error {
-		num := c.Params("numeric")
-		int, err := strconv.ParseInt(num, 10, 0)
-		if err != nil {
+	arithmetic.Get("/add/:n1/:n2", func(c *fiber.Ctx) error {
+		f1, e1 := strconv.ParseFloat(c.Params("n1"), 32)
+		f2, e2 := strconv.ParseFloat(c.Params("n2"), 32)
+		if e1 != nil || e2 != nil {
 			return fiber.NewError(500, "path variable isn't numeric")
 		}
-		msg := fmt.Sprintf("number %d", int)
-		return c.SendString(msg)
+		return c.JSON(map[string]float64{"addition": (f1 + f2)})
 	})
+	arithmetic.Get("/sub/:n1/:n2", func(c *fiber.Ctx) error {
+		f1, e1 := strconv.ParseFloat(c.Params("n1"), 32)
+		f2, e2 := strconv.ParseFloat(c.Params("n2"), 32)
+		if e1 != nil || e2 != nil {
+			return fiber.NewError(500, "path variable isn't numeric")
+		}
+		return c.JSON(map[string]float64{"subtraction": (f1 - f2)})
+	})
+	arithmetic.Get("/mul/:n1/:n2", func(c *fiber.Ctx) error {
+		f1, e1 := strconv.ParseFloat(c.Params("n1"), 32)
+		f2, e2 := strconv.ParseFloat(c.Params("n2"), 32)
+		if e1 != nil || e2 != nil {
+			return fiber.NewError(500, "path variable isn't numeric")
+		}
+		return c.JSON(map[string]float64{"multiplication": (f1 * f2)})
+	})
+	arithmetic.Get("/div/:n1/:n2", func(c *fiber.Ctx) error {
+		f1, e1 := strconv.ParseFloat(c.Params("n1"), 32)
+		f2, e2 := strconv.ParseFloat(c.Params("n2"), 32)
+		if e1 != nil || e2 != nil {
+			return fiber.NewError(500, "path variable isn't numeric")
+		}
+		return c.JSON(map[string]float64{"division": (f1 / f2)})
+	})
+	app.Mount("/arithmetic", arithmetic)
 
 	app.Listen(":3000")
 }
