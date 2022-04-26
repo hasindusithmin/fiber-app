@@ -8,7 +8,7 @@ import (
 
 func main() {
 	app := fiber.New()
-
+	app.Static("/", "./public")
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("Hello, World!")
 	})
