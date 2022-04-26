@@ -18,5 +18,10 @@ func main() {
 		return c.SendString(msg)
 	})
 
+	app.Get("/user", func(c *fiber.Ctx) error {
+		msg := fmt.Sprintf("%s is %s years old", c.Query("name"), c.Query("age"))
+		return c.SendString(msg)
+	})
+
 	app.Listen(":3000")
 }
