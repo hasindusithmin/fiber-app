@@ -12,7 +12,7 @@ func main() {
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("Hello, World!")
 	})
-
+	// ----------arithmetic app start----------
 	arithmetic := fiber.New()
 	arithmetic.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("golang maths")
@@ -49,6 +49,7 @@ func main() {
 		}
 		return c.JSON(map[string]float64{"division": (f1 / f2)})
 	})
+	// ----------arithmetic app end----------
 	app.Mount("/arithmetic", arithmetic)
 
 	app.Listen(":3000")
