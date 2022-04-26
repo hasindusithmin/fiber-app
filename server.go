@@ -23,5 +23,12 @@ func main() {
 		return c.SendString(msg)
 	})
 
+	app.Get("/car/:model?", func(c *fiber.Ctx) error {
+		if c.Params("model") != "" {
+			return c.SendString("model " + c.Params("model"))
+		}
+		return c.SendStatus(200)
+	})
+
 	app.Listen(":3000")
 }
